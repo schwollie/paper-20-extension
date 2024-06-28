@@ -1,0 +1,15 @@
+{"epoch": 0, "time_epoch": 1.95963, "loss": 0.43659139, "lr": 0, "params": 508210, "time_iter": 0.10314, "accuracy": 0.16465, "ap": 0.26253, "auc": 0.60009}
+{"epoch": 1, "time_epoch": 1.91074, "loss": 0.3694728, "lr": 0, "params": 508210, "time_iter": 0.10057, "accuracy": 0.16465, "ap": 0.26893, "auc": 0.58353}
+{"epoch": 2, "time_epoch": 1.72402, "loss": 0.33483921, "lr": 0, "params": 508210, "time_iter": 0.09074, "accuracy": 0.16465, "ap": 0.29887, "auc": 0.64638}
+{"epoch": 3, "time_epoch": 1.75277, "loss": 0.32440248, "lr": 0, "params": 508210, "time_iter": 0.09225, "accuracy": 0.16465, "ap": 0.32068, "auc": 0.69974}
+{"epoch": 4, "time_epoch": 1.75389, "loss": 0.30603034, "lr": 0, "params": 508210, "time_iter": 0.09231, "accuracy": 0.16465, "ap": 0.35647, "auc": 0.7476}
+{"epoch": 5, "time_epoch": 1.78724, "loss": 0.29577583, "lr": 0, "params": 508210, "time_iter": 0.09407, "accuracy": 0.16465, "ap": 0.36936, "auc": 0.76103}
+{"epoch": 6, "time_epoch": 1.77454, "loss": 0.30171779, "lr": 0, "params": 508210, "time_iter": 0.0934, "accuracy": 0.16465, "ap": 0.36428, "auc": 0.75492}
+{"epoch": 7, "time_epoch": 1.77121, "loss": 0.30227475, "lr": 0, "params": 508210, "time_iter": 0.09322, "accuracy": 0.16465, "ap": 0.38143, "auc": 0.76231}
+{"epoch": 8, "time_epoch": 1.76264, "loss": 0.29449328, "lr": 0, "params": 508210, "time_iter": 0.09277, "accuracy": 0.16465, "ap": 0.3912, "auc": 0.77553}
+{"epoch": 9, "time_epoch": 2.63577, "loss": 0.26857789, "lr": 0, "params": 508210, "time_iter": 0.13872, "accuracy": 0.16465, "ap": 0.42241, "auc": 0.79668}
+{"epoch": 10, "time_epoch": 2.51745, "loss": 0.27893599, "lr": 0, "params": 508210, "time_iter": 0.1325, "accuracy": 0.16465, "ap": 0.4061, "auc": 0.78491}
+{"epoch": 11, "time_epoch": 2.89552, "loss": 0.29271776, "lr": 0, "params": 508210, "time_iter": 0.1524, "accuracy": 0.16465, "ap": 0.39972, "auc": 0.78295}
+{"epoch": 12, "time_epoch": 2.65497, "loss": 0.27621984, "lr": 0, "params": 508210, "time_iter": 0.13974, "accuracy": 0.16465, "ap": 0.4268, "auc": 0.80854}
+{"epoch": 13, "time_epoch": 2.15379, "loss": 0.25970697, "lr": 0, "params": 508210, "time_iter": 0.11336, "accuracy": 0.16465, "ap": 0.44274, "auc": 0.82225}
+{"epoch": 14, "time_epoch": 2.49503, "loss": 0.2766858, "lr": 0, "params": 508210, "time_iter": 0.13132, "accuracy": 0.16465, "ap": 0.42561, "auc": 0.80065}

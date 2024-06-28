@@ -8,9 +8,9 @@
             "name": "Python Debugger: Current File with default argument GatedGCN peptides-struct",
             "type": "debugpy",
             "request": "launch",
-            "program": "${file}",
+            "program": "experiment1/main.py",
             "console": "integratedTerminal",
-            "args": "--cfg configs/GatedGCN/peptides-struct-GatedGCN.yaml  wandb.use False"
+            "args": "--cfg experiment1/configs/GCN/MVN-peptides-func-GCN.yaml wandb.use False"
         }
     ]
 }
