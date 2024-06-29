@@ -512,7 +512,7 @@ class VirtualNode(BaseTransform):
         col = torch.cat([col, full, arange], dim=0)
         edge_index = torch.stack([row, col], dim=0)
 
-        new_type = edge_type.new_full((num_nodes,), int(edge_type.max()) + 1)
+        new_type = edge_type.new_full((num_nodes,), int(edge_type.max()) + 1) # adding one edge type for virtual nodes
         edge_type = torch.cat([edge_type, new_type, new_type + 1], dim=0)
 
         old_data = copy.copy(data)
@@ -580,10 +580,6 @@ class MultipleVirtualNodes(BaseTransform):
 
         new_type = edge_type.new_full((num_nodes,), int(edge_type.max()) + 1)
         edge_type = torch.cat([edge_type, new_type, new_type + 1], dim=0)
-
-        #new_type = edge_type.new_full((num_nodes * self.num_vn,), int(edge_type.max()) + 1)
-        # Concatenating edge types (`edge_type` update)
-        #edge_type = torch.cat([edge_type, new_type.view(-1, self.num_vn), new_type.view(-1, self.num_vn) + 1], dim=0)
 
         old_data = copy.copy(data)
         for key, value in old_data.items():
