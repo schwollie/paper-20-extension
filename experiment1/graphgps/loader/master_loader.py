@@ -21,6 +21,7 @@ from torch_geometric.graphgym.config import cfg
 from torch_geometric.graphgym.loader import load_pyg, load_ogb, set_dataset_attr
 from torch_geometric.graphgym.register import register_loader
 from torch_geometric.transforms import BaseTransform, Compose
+from torch_geometric.data import HeteroData
 
 from graphgps.loader.dataset.coco_superpixels import COCOSuperpixels, NewCOCOSuperpixels
 from graphgps.loader.dataset.malnet_tiny import MalNetTiny
@@ -485,6 +486,13 @@ def preformat_PCQM4Mv2Contact(dataset_dir, name, vn=False):
         dataset.transform = structured_neg_sampling_transform
     return dataset
 
+def COO2MAT(col, row, edge_type, num_nodes):
+    edge_index = torch.stack([row, col], dim=0)
+    edge_index = edge_index.to(torch.long)
+    edge_attr = edge_type.to(torch.float)
+    edge_attr = edge_attr.view(-1, 1)
+    edge_attr = edge_attr.to(torch.float)
+    return edge_index, edge_attr
 
 # [docs]@functional_transform('virtual_node')
 class VirtualNode(BaseTransform):
@@ -549,6 +557,7 @@ class VirtualNode(BaseTransform):
             data.num_nodes = old_data.num_nodes + 1
         return data
 
+
 # [docs]@functional_transform('virtual_nodes')
 class MultipleVirtualNodes(BaseTransform):
     r"""Appends multiple virtual nodes to the given homogeneous graph that is connected
@@ -565,20 +574,25 @@ class MultipleVirtualNodes(BaseTransform):
     Furthermore, special edge types will be added both for in-coming and
     out-going information to and from the virtual node.
     """
-    def __init__(self, num_vn: int = 10):
+    def __init__(self, num_vn: int = 2):
         self.num_vn = num_vn
 
     def __call__(self, data: Data) -> Data:
         num_nodes, (row, col) = data.num_nodes, data.edge_index
         edge_type = data.get('edge_type', torch.zeros_like(row))
 
-        arange = torch.arange(num_nodes, device=row.device)
+        arange = torch.arange(num_nodes, device=row.device).repeat(self.num_vn)
         full = row.new_full((num_nodes,), num_nodes)
+        full_old = full.clone()
+        for i in range(self.num_vn-1):
+            full_temp = full_old.clone()
+            full = torch.cat([full, full_temp + i +1], dim=0)
+
         row = torch.cat([row, arange, full], dim=0)
         col = torch.cat([col, full, arange], dim=0)
         edge_index = torch.stack([row, col], dim=0)
 
-        new_type = edge_type.new_full((num_nodes,), int(edge_type.max()) + 1)
+        new_type = edge_type.new_full((num_nodes,), int(edge_type.max()) + 1).repeat(self.num_vn)
         edge_type = torch.cat([edge_type, new_type, new_type + 1], dim=0)
 
         old_data = copy.copy(data)
@@ -592,16 +606,16 @@ class MultipleVirtualNodes(BaseTransform):
 
                 fill_value = None
                 if key == 'edge_weight':
-                    size[dim] = (1+self.num_vn) * num_nodes
+                    size[dim] = (2*self.num_vn) * num_nodes # (1 * num_vn) * num_nodes
                     fill_value = 1.
                 elif key == 'batch':
                     size[dim] = 1
                     fill_value = int(value[0])
                 elif old_data.is_edge_attr(key):
-                    size[dim] = (1+self.num_vn) * num_nodes
+                    size[dim] = (2*self.num_vn) * num_nodes
                     fill_value = 0.
                 elif old_data.is_node_attr(key):
-                    size[dim] = 1
+                    size[dim] = self.num_vn
                     fill_value = 0.
 
                 if fill_value is not None:
