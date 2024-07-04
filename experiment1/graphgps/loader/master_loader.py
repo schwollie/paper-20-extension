@@ -1,3 +1,4 @@
+import re
 import sys
 
 
@@ -85,6 +86,24 @@ def log_loaded_dataset(dataset, format, name):
     #         f'{hist[i]} ({hist[i] / hist.sum() * 100:.2f}%)'
     #     )
 
+
+def parse_number(text):
+  """Parses the number of arbitrary size from the given string.
+
+  Args:
+      text: The string containing the number.
+
+  Returns:
+      The extracted number as an integer, or None if no number is found.
+  """
+
+  # Use a regular expression to capture digits continuously
+  match = re.search(r"\d+", text)  # Improved regex for better flexibility
+
+  if match:
+    return int(match.group())  # Extract and convert to integer
+  else:
+    return None  # Return None if no number found
 
 def load_dataset_master(format, name, dataset_dir):
     """
@@ -180,8 +199,12 @@ def load_dataset_master(format, name, dataset_dir):
             dataset = preformat_Peptides(dataset_dir, name[2:], vn=False)
         elif name.startswith('PureVN-peptides-'):
             dataset = preformat_Peptides(dataset_dir, name[7:], vn=False, purevn=True)
-        elif name.startswith('MVN-peptides-'): # multiple virtual nodes
-            dataset = preformat_Peptides(dataset_dir, name[4:], mvn=True)
+        elif name.startswith('MVN') and 'peptides' in name: # multiple virtual nodes
+            number_nodes = parse_number(name)
+            if number_nodes is None:
+                raise ValueError(f"Unsupported MVN-peptides dataset: {name}")
+            
+            dataset = preformat_Peptides(dataset_dir, name[(4 + len(str(number_nodes))):], vn=True, num_vn=number_nodes)
         elif name.startswith('HSG-peptides-'): # Hierarchical Support Graphs
             dataset = preformat_Peptides(dataset_dir, name[4:], hsg=True)
 
@@ -763,7 +786,7 @@ class FakeEdgeFeatureTransform(BaseTransform):
             return data
 
 
-def preformat_Peptides(dataset_dir, name, vn=False, purevn=False, mvn=False, hsg=False):
+def preformat_Peptides(dataset_dir, name, vn=False, purevn=False, hsg=False, num_vn=1):
     """Load Peptides dataset, functional or structural.
 
     Note: This dataset requires RDKit dependency!
@@ -792,8 +815,8 @@ def preformat_Peptides(dataset_dir, name, vn=False, purevn=False, mvn=False, hsg
     transform = {'transform': None if vn == False else VirtualNode()}
     if purevn:
         transform['transform'] = PureVirtualNode()
-    if mvn:
-        transform['transform'] = MultipleVirtualNodes()
+    if vn and num_vn > 1:
+        transform['transform'] = MultipleVirtualNodes(num_vn)
     if hsg:
         transform['transform'] = HierarchicalSupportGraph()
 

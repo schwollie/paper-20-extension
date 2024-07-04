@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "experiment1/main.py",
             "console": "integratedTerminal",
-            "args": "--cfg experiment1/configs/GCN/MVN-peptides-func-GCN.yaml wandb.use False"
+            "args": "--cfg experiment1/configs/GCN/MVN10-peptides-func-GCN.yaml wandb.use False"
         }
     ]
 }
