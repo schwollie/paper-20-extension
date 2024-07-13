@@ -22,7 +22,7 @@ python main.py --cfg configs/GatedGCN/MVN10-peptides-func-GatedGCN+RWSE.yaml  wa
 python main.py --cfg configs/GatedGCN/MVN10-peptides-struct-GatedGCN.yaml  wandb.use False
 python main.py --cfg configs/GatedGCN/MVN10-peptides-struct-GatedGCN+RWSE.yaml  wandb.use False
 
-python main.py --cfg configs/GCN/MNV10-peptides-func-GCN.yaml  wandb.use False
+python main.py --cfg configs/GCN/MVN10-peptides-func-GCN.yaml  wandb.use False
 python main.py --cfg configs/GCN/MVN10-peptides-struct-GCN.yaml  wandb.use False
 
 python main.py --cfg configs/GINE/MVN10-peptides-func-GINE.yaml  wandb.use False
