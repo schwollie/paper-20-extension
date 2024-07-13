@@ -1,0 +1,371 @@
+[*] Run ID 0: seed=0, split_index=0
+    Starting now: 2024-07-08 17:04:38.411640
+[*] Loaded dataset 'HSG-peptides-functional' from 'OGB':
+  Data(edge_index=[2, 4773974], edge_attr=[4773974, 3], x=[2344859, 9], y=[15535, 10])
+  undirected: True
+  num graphs: 15535
+  avg num_nodes/graph: 150
+  num node features: 9
+  num edge features: 3
+  num classes: 10
+GraphGymModule(
+  (model): GNN(
+    (encoder): FeatureEncoder(
+      (node_encoder): AtomEncoder(
+        (atom_embedding_list): ModuleList(
+          (0): Embedding(119, 300)
+          (1): Embedding(5, 300)
+          (2-3): 2 x Embedding(12, 300)
+          (4): Embedding(10, 300)
+          (5-6): 2 x Embedding(6, 300)
+          (7-8): 2 x Embedding(2, 300)
+        )
+      )
+    )
+    (mp): GNNStackStage(
+      (layer0): GeneralLayer(
+        (layer): GCNConv(
+          (model): GCNConv(300, 300)
+        )
+        (post_layer): Sequential(
+          (0): BatchNorm1d(300, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (1): ReLU()
+        )
+      )
+      (layer1): GeneralLayer(
+        (layer): GCNConv(
+          (model): GCNConv(300, 300)
+        )
+        (post_layer): Sequential(
+          (0): BatchNorm1d(300, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (1): ReLU()
+        )
+      )
+      (layer2): GeneralLayer(
+        (layer): GCNConv(
+          (model): GCNConv(300, 300)
+        )
+        (post_layer): Sequential(
+          (0): BatchNorm1d(300, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (1): ReLU()
+        )
+      )
+      (layer3): GeneralLayer(
+        (layer): GCNConv(
+          (model): GCNConv(300, 300)
+        )
+        (post_layer): Sequential(
+          (0): BatchNorm1d(300, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (1): ReLU()
+        )
+      )
+      (layer4): GeneralLayer(
+        (layer): GCNConv(
+          (model): GCNConv(300, 300)
+        )
+        (post_layer): Sequential(
+          (0): BatchNorm1d(300, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (1): ReLU()
+        )
+      )
+    )
+    (post_mp): GNNGraphHead(
+      (layer_post_mp): MLP(
+        (model): Sequential(
+          (0): Linear(
+            (model): Linear(300, 10, bias=True)
+          )
+        )
+      )
+    )
+  )
+)
+accelerator: cuda
+benchmark: False
+bn:
+  eps: 1e-05
+  mom: 0.1
+cfg_dest: config.yaml
+custom_metrics: []
+dataset:
+  cache_load: False
+  cache_save: False
+  dir: ./datasets
+  edge_dim: 128
+  edge_encoder: False
+  edge_encoder_bn: True
+  edge_encoder_name: Bond
+  edge_encoder_num_types: 0
+  edge_message_ratio: 0.8
+  edge_negative_sampling_ratio: 1.0
+  edge_train_mode: all
+  encoder: True
+  encoder_bn: True
+  encoder_dim: 128
+  encoder_name: db
+  format: OGB
+  label_column: none
+  label_table: none
+  location: local
+  name: HSG-peptides-functional
+  node_encoder: True
+  node_encoder_bn: False
+  node_encoder_name: Atom
+  node_encoder_num_types: 0
+  remove_feature: False
+  resample_disjoint: False
+  resample_negative: False
+  shuffle_split: True
+  slic_compactness: 10
+  split: [0.8, 0.1, 0.1]
+  split_dir: ./splits
+  split_index: 0
+  split_mode: standard
+  task: graph
+  task_type: classification_multilabel
+  to_undirected: False
+  transductive: False
+  transform: none
+  tu_simple: True
+device: cuda
+devices: 1
+example_arg: example
+example_group:
+  example_arg: example
+gnn:
+  act: relu
+  agg: mean
+  att_final_linear: False
+  att_final_linear_bn: False
+  att_heads: 1
+  batchnorm: True
+  clear_feature: True
+  dim_inner: 300
+  dropout: 0.0
+  head: graph
+  keep_edge: 0.5
+  l2norm: True
+  layer_type: gcnconv
+  layers_mp: 5
+  layers_post_mp: 1
+  layers_pre_mp: 0
+  msg_direction: single
+  normalize_adj: False
+  residual: False
+  self_msg: concat
+  skip_every: 1
+  stage_type: stack
+gpu_mem: False
+gt:
+  attn_dropout: 0.0
+  batch_norm: True
+  bigbird:
+    add_cross_attention: False
+    attention_type: block_sparse
+    block_size: 3
+    chunk_size_feed_forward: 0
+    hidden_act: relu
+    is_decoder: False
+    layer_norm_eps: 1e-06
+    max_position_embeddings: 128
+    num_random_blocks: 3
+    use_bias: False
+  dim_hidden: 64
+  dropout: 0.0
+  full_graph: True
+  gamma: 1e-05
+  layer_norm: False
+  layer_type: SANLayer
+  layers: 3
+  n_heads: 8
+  pna_degrees: []
+  residual: True
+mem:
+  inplace: False
+metric_agg: argmax
+metric_best: ap
+model:
+  edge_decoding: dot
+  graph_pooling: mean
+  loss_fun: cross_entropy
+  match_upper: True
+  size_average: mean
+  thresh: 0.5
+  type: gnn
+name_tag: 
+num_threads: 6
+num_workers: 0
+optim:
+  base_lr: 0.001
+  batch_accumulation: 1
+  clip_grad_norm: False
+  lr_decay: 0.1
+  max_epoch: 500
+  min_lr: 1e-05
+  momentum: 0.9
+  num_warmup_epochs: 50
+  optimizer: adamW
+  reduce_factor: 0.5
+  schedule_patience: 20
+  scheduler: reduce_on_plateau
+  steps: [30, 60, 90]
+  weight_decay: 0.0
+out_dir: results/HSG-peptides-func-GCN
+posenc_ElstaticSE:
+  dim_pe: 16
+  enable: False
+  kernel:
+    times: []
+    times_func: range(10)
+  layers: 3
+  model: none
+  n_heads: 4
+  pass_as_var: False
+  post_layers: 0
+  raw_norm_type: none
+posenc_EquivStableLapPE:
+  eigen:
+    eigvec_norm: L2
+    laplacian_norm: sym
+    max_freqs: 10
+  enable: False
+  raw_norm_type: none
+posenc_HKdiagSE:
+  dim_pe: 16
+  enable: False
+  kernel:
+    times: []
+    times_func: 
+  layers: 3
+  model: none
+  n_heads: 4
+  pass_as_var: False
+  post_layers: 0
+  raw_norm_type: none
+posenc_LapPE:
+  dim_pe: 16
+  eigen:
+    eigvec_norm: L2
+    laplacian_norm: sym
+    max_freqs: 10
+  enable: False
+  layers: 3
+  model: none
+  n_heads: 4
+  pass_as_var: False
+  post_layers: 0
+  raw_norm_type: none
+posenc_LapPEVec:
+  dim_pe: 16
+  eigen:
+    eigvec_norm: L2
+    laplacian_norm: sym
+    max_freqs: 10
+  enable: False
+  layers: 3
+  model: none
+  n_heads: 4
+  pass_as_var: False
+  post_layers: 0
+  raw_norm_type: none
+posenc_RWSE:
+  dim_pe: 16
+  enable: False
+  kernel:
+    times: []
+    times_func: 
+  layers: 3
+  model: none
+  n_heads: 4
+  pass_as_var: False
+  post_layers: 0
+  raw_norm_type: none
+posenc_SignNet:
+  dim_pe: 16
+  eigen:
+    eigvec_norm: L2
+    laplacian_norm: sym
+    max_freqs: 10
+  enable: False
+  layers: 3
+  model: none
+  n_heads: 4
+  pass_as_var: False
+  phi_hidden_dim: 64
+  phi_out_dim: 4
+  post_layers: 0
+  raw_norm_type: none
+print: both
+round: 5
+run_dir: results/HSG-peptides-func-GCN/0
+run_id: 0
+run_multiple_splits: []
+seed: 0
+share:
+  dim_in: 9
+  dim_out: 10
+  num_splits: 3
+tensorboard_agg: True
+tensorboard_each_run: False
+train:
+  auto_resume: False
+  batch_size: 128
+  ckpt_clean: True
+  ckpt_period: 100
+  enable_ckpt: True
+  epoch_resume: -1
+  eval_period: 1
+  finetune: 
+  freeze_pretrained: False
+  iter_per_epoch: 32
+  mode: custom
+  neighbor_sizes: [20, 15, 10, 5]
+  node_per_graph: 32
+  radius: extend
+  sample_node: False
+  sampler: full_batch
+  skip_train_eval: False
+  walk_length: 4
+val:
+  node_per_graph: 32
+  radius: extend
+  sample_node: False
+  sampler: full_batch
+view_emb: False
+wandb:
+  entity: kludge
+  name: 
+  project: gtblueprint
+  use: False
+Num parameters: 508210
+Start from epoch 0
+train: {'epoch': 0, 'time_epoch': 135.8939, 'eta': 67811.05606, 'eta_hours': 18.8364, 'loss': 0.53594142, 'lr': nan, 'params': 508210, 'time_iter': 1.59875, 'accuracy': 0.16463, 'ap': 0.18258, 'auc': 0.52592, 'trivial_loss': 0.7516854915219376}
+...computing epoch stats took: 0.06s
+val: {'epoch': 0, 'time_epoch': 27.07714, 'loss': 0.43521851, 'lr': 0, 'params': 508210, 'time_iter': 1.42511, 'accuracy': 0.16482, 'ap': 0.26052, 'auc': 0.59363}
+...computing epoch stats took: 0.04s
+test: {'epoch': 0, 'time_epoch': 27.07012, 'loss': 0.43497088, 'lr': 0, 'params': 508210, 'time_iter': 1.42474, 'accuracy': 0.16465, 'ap': 0.26294, 'auc': 0.60363}
+...computing epoch stats took: 0.03s
+> Epoch 0: took 190.2s (avg 190.2s) | Best so far: epoch 0	train_loss: 0.5359 train_ap: 0.1826	val_loss: 0.4352 val_ap: 0.2605	test_loss: 0.4350 test_ap: 0.2629
+train: {'epoch': 1, 'time_epoch': 135.28264, 'eta': 67522.95808, 'eta_hours': 18.75638, 'loss': 0.38132897, 'lr': nan, 'params': 508210, 'time_iter': 1.59156, 'accuracy': 0.16463, 'ap': 0.25318, 'auc': 0.59311, 'trivial_loss': 0.7516922538889854}
+...computing epoch stats took: 0.03s
+val: {'epoch': 1, 'time_epoch': 27.00965, 'loss': 0.35566843, 'lr': 0, 'params': 508210, 'time_iter': 1.42156, 'accuracy': 0.16482, 'ap': 0.29063, 'auc': 0.64462}
+...computing epoch stats took: 0.03s
+test: {'epoch': 1, 'time_epoch': 27.43124, 'loss': 0.35508042, 'lr': 0, 'params': 508210, 'time_iter': 1.44375, 'accuracy': 0.16465, 'ap': 0.29036, 'auc': 0.6419}
+...computing epoch stats took: 0.03s
+> Epoch 1: took 189.8s (avg 190.0s) | Best so far: epoch 1	train_loss: 0.3813 train_ap: 0.2532	val_loss: 0.3557 val_ap: 0.2906	test_loss: 0.3551 test_ap: 0.2904
+train: {'epoch': 2, 'time_epoch': 135.40591, 'eta': 67357.15944, 'eta_hours': 18.71032, 'loss': 0.34250757, 'lr': nan, 'params': 508210, 'time_iter': 1.59301, 'accuracy': 0.16463, 'ap': 0.28395, 'auc': 0.6345, 'trivial_loss': 0.751696577821409}
+...computing epoch stats took: 0.04s
+val: {'epoch': 2, 'time_epoch': 27.49219, 'loss': 0.33558425, 'lr': 0, 'params': 508210, 'time_iter': 1.44696, 'accuracy': 0.16482, 'ap': 0.30205, 'auc': 0.66052}
+...computing epoch stats took: 0.03s
+test: {'epoch': 2, 'time_epoch': 27.64153, 'loss': 0.33467099, 'lr': 0, 'params': 508210, 'time_iter': 1.45482, 'accuracy': 0.16465, 'ap': 0.30561, 'auc': 0.65282}
+...computing epoch stats took: 0.03s
+> Epoch 2: took 190.6s (avg 190.2s) | Best so far: epoch 2	train_loss: 0.3425 train_ap: 0.2839	val_loss: 0.3356 val_ap: 0.3020	test_loss: 0.3347 test_ap: 0.3056
+train: {'epoch': 3, 'time_epoch': 136.16547, 'eta': 67300.74194, 'eta_hours': 18.69465, 'loss': 0.32492135, 'lr': nan, 'params': 508210, 'time_iter': 1.60195, 'accuracy': 0.16463, 'ap': 0.30685, 'auc': 0.67546, 'trivial_loss': 0.751688331384772}
+val: {'epoch': 3, 'time_epoch': 27.28552, 'loss': 0.32388107, 'lr': 0, 'params': 508210, 'time_iter': 1.43608, 'accuracy': 0.16482, 'ap': 0.32144, 'auc': 0.70506}
+test: {'epoch': 3, 'time_epoch': 26.90563, 'loss': 0.32389813, 'lr': 0, 'params': 508210, 'time_iter': 1.41609, 'accuracy': 0.16465, 'ap': 0.31815, 'auc': 0.69889}
+> Epoch 3: took 190.5s (avg 190.3s) | Best so far: epoch 3	train_loss: 0.3249 train_ap: 0.3069	val_loss: 0.3239 val_ap: 0.3214	test_loss: 0.3239 test_ap: 0.3181
+train: {'epoch': 4, 'time_epoch': 134.09705, 'eta': 67007.65241, 'eta_hours': 18.61324, 'loss': 0.31223564, 'lr': nan, 'params': 508210, 'time_iter': 1.57761, 'accuracy': 0.16463, 'ap': 0.33652, 'auc': 0.70929, 'trivial_loss': 0.7516991789257867}
+val: {'epoch': 4, 'time_epoch': 28.32476, 'loss': 0.31590681, 'lr': 0, 'params': 508210, 'time_iter': 1.49078, 'accuracy': 0.16482, 'ap': 0.33954, 'auc': 0.72704}
+test: {'epoch': 4, 'time_epoch': 27.51644, 'loss': 0.31487766, 'lr': 0, 'params': 508210, 'time_iter': 1.44823, 'accuracy': 0.16465, 'ap': 0.33667, 'auc': 0.72045}
+> Epoch 4: took 190.0s (avg 190.2s) | Best so far: epoch 4	train_loss: 0.3122 train_ap: 0.3365	val_loss: 0.3159 val_ap: 0.3395	test_loss: 0.3149 test_ap: 0.3367
+train: {'epoch': 5, 'time_epoch': 138.14422, 'eta': 67100.77726, 'eta_hours': 18.6391, 'loss': 0.30217762, 'lr': nan, 'params': 508210, 'time_iter': 1.62523, 'accuracy': 0.16463, 'ap': 0.35878, 'auc': 0.73349, 'trivial_loss': 0.7516933800566112}

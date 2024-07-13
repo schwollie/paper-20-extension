@@ -629,13 +629,13 @@ class MultipleVirtualNodes(BaseTransform):
 
                 fill_value = None
                 if key == 'edge_weight':
-                    size[dim] = (2*self.num_vn) * num_nodes # (1 * num_vn) * num_nodes
+                    size[dim] = 2 * self.num_vn * num_nodes
                     fill_value = 1.
                 elif key == 'batch':
                     size[dim] = 1
                     fill_value = int(value[0])
                 elif old_data.is_edge_attr(key):
-                    size[dim] = (2*self.num_vn) * num_nodes
+                    size[dim] = 2 * self.num_vn * num_nodes
                     fill_value = 0.
                 elif old_data.is_node_attr(key):
                     size[dim] = self.num_vn
@@ -651,6 +651,11 @@ class MultipleVirtualNodes(BaseTransform):
         if 'num_nodes' in data:
             data.num_nodes = old_data.num_nodes + self.num_vn
         return data
+
+from sklearn.cluster import SpectralClustering
+import numpy as np
+from scipy.sparse.coo import coo_matrix
+
 
 # [docs]@functional_transform('virtual_nodes')
 class HierarchicalSupportGraph(BaseTransform):
@@ -668,18 +673,44 @@ class HierarchicalSupportGraph(BaseTransform):
     Furthermore, special edge types will be added both for in-coming and
     out-going information to and from the virtual node.
     """
+    def __init__(self, num_vn: int = 5):
+        self.num_vn = num_vn
 
     def __call__(self, data: Data) -> Data:
         num_nodes, (row, col) = data.num_nodes, data.edge_index
         edge_type = data.get('edge_type', torch.zeros_like(row))
+        edge_index = torch.stack([row, col], dim=0)
 
+        if num_nodes < self.num_vn:
+            return MultipleVirtualNodes(self.num_vn).__call__(data)
+
+        self.num_vn = min(num_nodes, self.num_vn)
+
+        clusters = self.num_vn - 1
+        
+        adj_matrix_coo = coo_matrix((edge_type.clone() + 1, (row, col)), shape=[num_nodes, num_nodes])
+        
+        sc = SpectralClustering(clusters, affinity='nearest_neighbors', n_init=5,
+                        assign_labels='discretize', n_neighbors=min(10, num_nodes-1))
+        cluster_labels = sc.fit_predict(adj_matrix_coo) # cluster of each node
+        
+        # first add all edges between existing nodes and cluster virtual nodes
         arange = torch.arange(num_nodes, device=row.device)
         full = row.new_full((num_nodes,), num_nodes)
+        for i in range(num_nodes):
+            full[i] = cluster_labels[i] + num_nodes
+
+        # add all edges from cluster virtual nodes to the global virtual node
+        add_arrange = torch.arange(num_nodes, num_nodes + clusters, device=row.device)
+        add_full = torch.full_like(add_arrange, num_nodes + clusters)
+        arange = torch.cat([arange, add_arrange], dim=0)
+        full = torch.cat([full, add_full], dim=0)
+
         row = torch.cat([row, arange, full], dim=0)
         col = torch.cat([col, full, arange], dim=0)
         edge_index = torch.stack([row, col], dim=0)
 
-        new_type = edge_type.new_full((num_nodes,), int(edge_type.max()) + 1)
+        new_type = arange.new_full(full.size(), int(edge_type.max()) + 1)
         edge_type = torch.cat([edge_type, new_type, new_type + 1], dim=0)
 
         old_data = copy.copy(data)
@@ -693,16 +724,16 @@ class HierarchicalSupportGraph(BaseTransform):
 
                 fill_value = None
                 if key == 'edge_weight':
-                    size[dim] = 2 * num_nodes
+                    size[dim] = 2 * (num_nodes + clusters)
                     fill_value = 1.
                 elif key == 'batch':
                     size[dim] = 1
                     fill_value = int(value[0])
                 elif old_data.is_edge_attr(key):
-                    size[dim] = 2 * num_nodes
+                    size[dim] = 2 * (num_nodes + clusters)
                     fill_value = 0.
                 elif old_data.is_node_attr(key):
-                    size[dim] = 1
+                    size[dim] = self.num_vn
                     fill_value = 0.
 
                 if fill_value is not None:
@@ -713,7 +744,7 @@ class HierarchicalSupportGraph(BaseTransform):
         data.edge_type = edge_type
 
         if 'num_nodes' in data:
-            data.num_nodes = old_data.num_nodes + 1
+            data.num_nodes = old_data.num_nodes + self.num_vn
         return data
 
 # [docs]@functional_transform('virtual_node')

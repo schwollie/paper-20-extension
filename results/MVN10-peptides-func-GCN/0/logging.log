@@ -1,0 +1,4 @@
+[*] Run ID 0: seed=0, split_index=0
+    Starting now: 2024-07-08 16:23:02.883554
+[*] Loaded dataset 'MVN10-peptides-functional' from 'OGB':
+  Data(edge_index=[2, 4773974], edge_attr=[4773974, 3], x=[2344859, 9], y=[15535, 10])
