@@ -22,4 +22,4 @@ Also a shell setup script is provided if preferred. Refer to 'experiment1/Readme
 
 ### Execution
 
-The models can be executed by running the notebook or alternatively by running 'experiment1/runAll.sh' as described in 'experiment1/Readme.md'.
+The models can be executed by running the notebook or alternatively by running 'experiment1/runAll.sh' or 'experiment1/runExtension.sh' as described in 'experiment1/Readme.md'.
